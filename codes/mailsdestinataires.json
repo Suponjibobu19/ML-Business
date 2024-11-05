@@ -1,0 +1,14 @@
+{
+    "recipients": [
+        {
+            "name": "Tong LI",
+            "email": "li.tong@aivancity.education",
+            "fonction": "professeur de machine learning"
+        },
+        {
+            "name": "Nom du destinataire 2",
+            "email": "darryl.towa@aivancity.education",
+            "fonction": "professeur d'anglais"
+        }
+    ]
+}

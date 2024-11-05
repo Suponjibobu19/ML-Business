@@ -1,0 +1,11 @@
+{"installed":
+{
+    "client_id":"351478385575-s5rqb45euaglq1v5ge35pm5bm47kcr0u.apps.googleusercontent.com",
+    "project_id":"mailgps",
+    "auth_uri":"https://accounts.google.com/o/oauth2/auth",
+    "token_uri":"https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs",
+    "client_secret":"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",
+    "redirect_uris":["http://localhost"]
+    }
+}
