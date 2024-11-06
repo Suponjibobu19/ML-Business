@@ -6,9 +6,12 @@
             "fonction": "professeur de machine learning"
         },
         {
-            "name": "Nom du destinataire 2",
+            "name": "Darryl",
             "email": "darryl.towa@aivancity.education",
             "fonction": "professeur d'anglais"
-        }
+        },
+        { "name": "Shafiya",
+        "email": "shafiya.kausar@aivancity.education",
+        "fonction": "professeur de mathématique"}
     ]
 }

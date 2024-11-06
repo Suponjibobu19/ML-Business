@@ -17,19 +17,44 @@ def clean_all_urls(text):
     
     return text.strip()
 
+def remove_emojis(text):
+    # Pattern Unicode pour détecter les emojis
+    emoji_pattern = re.compile(
+        "["
+        "\U0001F600-\U0001F64F"  # emoticônes
+        "\U0001F300-\U0001F5FF"  # symboles et pictogrammes divers
+        "\U0001F680-\U0001F6FF"  # transport et symboles
+        "\U0001F700-\U0001F77F"  # symboles alchimiques
+        "\U0001F780-\U0001F7FF"  # symboles géométriques
+        "\U0001F800-\U0001F8FF"  # symboles divers et pictogrammes
+        "\U0001F900-\U0001F9FF"  # émoticônes supplémentaires et autres
+        "\U0001FA00-\U0001FA6F"  # objets divers
+        "\U00002702-\U000027B0"  # divers
+        "\U000024C2-\U0001F251"
+        "]+", flags=re.UNICODE)
+    
+    return emoji_pattern.sub(r'', text)
+
 def save_email_to_file(email_data, filename="codes/mails.json"):
-    # Charger les emails existants s'ils existent
+    # Charger les emails existants s'ils existent avec un encodage utf-8
     if os.path.exists(filename):
-        with open(filename, 'r', encoding='utf-8') as file:
-            existing_data = json.load(file)
-            email_list = existing_data.get("emails", [])  # Récupérer la liste des emails
+        try:
+            with open(filename, 'r', encoding='utf-8') as file:
+                existing_data = json.load(file)
+                email_list = existing_data.get("emails", [])  # Récupérer la liste des emails
+        except UnicodeDecodeError:
+            # Si l'encodage utf-8 échoue, tenter avec un autre encodage
+            with open(filename, 'r', encoding='cp1252', errors='ignore') as file:
+                existing_data = json.load(file)
+                email_list = existing_data.get("emails", [])  # Récupérer la liste des emails
     else:
         email_list = []
 
-    # Appliquer le nettoyage des URLs et autres caractères à chaque email
+    # Appliquer le nettoyage des URLs, emojis, et autres caractères à chaque email
     for email in email_data:
         if "body" in email:
             email["body"] = clean_all_urls(email["body"])
+            email["body"] = remove_emojis(email["body"])
 
     # Ajouter les nouveaux emails nettoyés à la liste
     email_list.extend(email_data)
@@ -39,7 +64,7 @@ def save_email_to_file(email_data, filename="codes/mails.json"):
         "emails": email_list
     }
 
-    # Enregistrer dans le fichier JSON
+    # Enregistrer dans le fichier JSON avec un encodage utf-8
     with open(filename, 'w', encoding='utf-8') as file:
         json.dump(data_to_save, file, ensure_ascii=False, indent=4)
 
