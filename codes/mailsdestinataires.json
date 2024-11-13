@@ -10,8 +10,13 @@
             "email": "darryl.towa@aivancity.education",
             "fonction": "professeur d'anglais"
         },
-        { "name": "Shafiya",
-        "email": "shafiya.kausar@aivancity.education",
-        "fonction": "professeur de mathématique"}
+        {
+            "name": "Shafiya",
+            "email": "shafiya.kausar@aivancity.education",
+            "fonction": "professeur de mathématique"
+    },
+        {"name": "Ahmed",
+        "email": "ahmedazizbenaissa@gmail.com",
+        "fonction": "professeur de deep learning"}
     ]
 }
