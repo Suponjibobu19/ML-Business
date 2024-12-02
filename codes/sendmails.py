@@ -1,3 +1,4 @@
+# sendmails.py
 import os.path
 import base64
 from google.auth.transport.requests import Request
@@ -8,12 +9,51 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import json
 
-# Scopes pour lire et envoyer des emails
+# Scope for Gmail API
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
+def authenticate_gmail():
+    """
+    Authenticates the user with the Gmail API and returns a service object.
+    """
+    creds = None
 
-# Fonction pour créer le message MIME
+    if os.path.exists('codes/token.json'):
+        creds = Credentials.from_authorized_user_file('codes/token.json', SCOPES)
+
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file('codes/my_cred_file.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+
+        with open('codes/token.json', 'w') as token:
+            token.write(creds.to_json())
+
+    try:
+        service = build('gmail', 'v1', credentials=creds)
+        return service
+    except Exception as e:
+        print(f"Error authenticating Gmail API: {e}")
+        return None
+
+def get_authenticated_email():
+    """
+    Retrieves the authenticated user's email address.
+    """
+    try:
+        service = authenticate_gmail()
+        user_profile = service.users().getProfile(userId='me').execute()
+        return user_profile.get('emailAddress')
+    except Exception as e:
+        print(f"Failed to retrieve authenticated email: {e}")
+        return None
+
 def create_message(sender, to, subject, message_text):
+    """
+    Creates a MIME email message.
+    """
     message = MIMEMultipart()
     message['From'] = sender
     message['To'] = to
@@ -22,44 +62,45 @@ def create_message(sender, to, subject, message_text):
     raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
     return {'raw': raw_message}
 
-# Fonction pour envoyer un email via l'API Gmail
 def send_email(service, sender, to, subject, message_text):
+    """
+    Sends an email via Gmail API.
+    """
     message = create_message(sender, to, subject, message_text)
     try:
         sent_message = service.users().messages().send(userId="me", body=message).execute()
-        print(f"Message sent to {to}, Message Id: {sent_message['id']}")
+        print(f"Email sent to {to}. Message ID: {sent_message['id']}")
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"Error sending email to {to}: {e}")
 
-# Charger les destinataires depuis un fichier JSON
-def load_recipients(filename):
-    try:
-        with open(filename, 'r', encoding='utf-8') as file:
-            data = json.load(file)
-            return data['recipients']
-    except Exception as e:
-        print(f"Error loading recipients: {e}")
-        return []
+def send_emails_to_classified_recipients(service, classification_results):
+    """
+    Sends emails based on classification results.
+    """
+    sender = get_authenticated_email()
+    if not sender:
+        print("Failed to retrieve sender email. Aborting.")
+        return
 
-# Envoi des emails à partir de la liste des destinataires
-def send_emails_to_recipients(service, sender, filename, subject, body):
-    recipients = load_recipients(filename)
-    for recipient in recipients:
-        email_address = recipient.get("email")
-        if email_address:
-            send_email(service, sender, email_address, subject, body)
-        else:
-            print(f"No valid email address for recipient: {recipient}")
+    for result in classification_results:
+        recipient_email = result.get("recipient_email")
+        if not recipient_email:
+            print(f"Skipping email ID '{result.get('email_id')}' due to missing recipient email.")
+            continue
 
-# Utilisation du script pour envoyer un email
-if __name__ == "__main__":
-    # Authentifier l'utilisateur et créer le service Gmail
-    service = authenticate_gmail()
+        subject = f"Processed Email: {result.get('email_subject')}"
+        body = (
+            f"Hello,\n\n"
+            f"The following email has been processed:\n\n"
+            f"Email ID: {result.get('email_id')}\n"
+            f"From: {result.get('from')}\n"
+            f"Subject: {result.get('email_subject')}\n"
+            f"Body: {result.get('email_body')}\n\n"
+            f"Classification: {result.get('classified_as')}\n\n"
+            f"Best regards,\nAutomated System"
+        )
 
-    # Définir l'expéditeur, le sujet et le corps du message
-    sender_email = "your_email@gmail.com"
-    subject = "Notification"
-    body = "This is a test email sent from the automated system."
-
-    # Envoyer les emails
-    send_emails_to_recipients(service, sender_email, "codes/addresses.json", subject, body)
+        try:
+            send_email(service, sender, recipient_email, subject, body)
+        except Exception as e:
+            print(f"Error sending email to {recipient_email} for email ID '{result.get('email_id')}': {e}")

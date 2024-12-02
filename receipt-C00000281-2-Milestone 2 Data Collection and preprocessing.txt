@@ -1,0 +1,8 @@
+Votre remise a été effectuée avec succès !
+Cours : undefined, PGE4.S1 (INI) - Machine Learning: Business Projects
+Évaluation : Milestone 2: Data Collection and preprocessing
+
+Date de remise : 15/11/2024 15:45
+Taille de la remise : 41,7 ko
+Auteur de la remise : Thibault GOUTORBE
+Numéro de confirmation : 0abb9e533dd84a13aa01a060235df9a4

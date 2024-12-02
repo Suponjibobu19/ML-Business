@@ -3,20 +3,20 @@
         {
             "name": "Tong LI",
             "email": "li.tong@aivancity.education",
-            "fonction": "professeur de machine learning"
+            "fonction": "fair machine learning"
         },
         {
-            "name": "Darryl",
-            "email": "darryl.towa@aivancity.education",
-            "fonction": "professeur d'anglais"
+            "name": "Thibault",
+            "email": "thibault.goutorbe@aivancity.education",
+            "fonction": "advanced data analysis and visualization"
         },
         {
             "name": "Shafiya",
             "email": "shafiya.kausar@aivancity.education",
-            "fonction": "professeur de mathématique"
+            "fonction": "natural language processing"
     },
         {"name": "Ahmed",
         "email": "ahmedazizbenaissa@gmail.com",
-        "fonction": "professeur de deep learning"}
+        "fonction": "data anonymization"}
     ]
 }
