@@ -2,21 +2,27 @@
     "recipients": [
         {
             "name": "Tong LI",
-            "email": "li.tong@aivancity.education",
-            "fonction": "fair machine learning"
-        },
-        {
-            "name": "Thibault",
             "email": "thibault.goutorbe@aivancity.education",
             "fonction": "advanced data analysis and visualization"
         },
         {
+            "name": "Thibault",
+            "email": "thibault.goutorbe@aivancity.education",
+            "fonction": "career coatching"
+        },
+        {
             "name": "Shafiya",
-            "email": "shafiya.kausar@aivancity.education",
+            "email": "thibault.goutorbe@aivancity.education",
             "fonction": "natural language processing"
     },
         {"name": "Ahmed",
-        "email": "ahmedazizbenaissa@gmail.com",
+        "email": "thibault.goutorbe@aivancity.education",
         "fonction": "data anonymization"}
+    ,
+    {
+        "name": "Thibault",
+        "email": "thibault.goutorbe@aivancity.education",
+        "fonction": "ai and data science for marketing"
+    }
     ]
 }
